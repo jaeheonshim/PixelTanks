@@ -5,7 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.UUID;
+
 public class Tank {
+    private UUID uuid;
+
     private Vector2 position = new Vector2();
     private float rotation = 90;
     private Vector2 velocity = new Vector2();
@@ -13,8 +17,12 @@ public class Tank {
     public static final float ROTATION_SPEED = 120;
     public static final float MOVEMENT_SPEED = 50;
 
+    public Tank(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     public void update(float delta) {
-        handleInput(delta);
+        //handleInput(delta);
 
         position.add(new Vector2(velocity).scl(delta));
     }
@@ -51,5 +59,21 @@ public class Tank {
 
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
     }
 }
