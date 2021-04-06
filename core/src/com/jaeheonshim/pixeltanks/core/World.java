@@ -6,11 +6,13 @@ import java.util.List;
 public class World {
     private List<Tank> tanks = new ArrayList<>();
 
-    public World() {
-        tanks.add(new Tank());
-    }
-
     public List<Tank> getTanks() {
         return tanks;
+    }
+
+    public void update(float delta) {
+        for(Tank tank : tanks) {
+            tank.update(delta);
+        }
     }
 }

@@ -26,7 +26,20 @@ public class WorldRenderer implements Disposable {
 
     private void drawTanks(SpriteBatch spriteBatch) {
         for(Tank tank : world.getTanks()) {
-            spriteBatch.draw(tankTexture, tank.getPosition().x, tank.getPosition().y);
+            spriteBatch.draw(
+                    tankTexture,
+                    tank.getPosition().x,
+                    tank.getPosition().y,
+                    tankTexture.getWidth() / 2f,
+                    tankTexture.getHeight() / 2f,
+                    tankTexture.getWidth(),
+                    tankTexture.getHeight(),
+                    1, 1,
+                    tank.getRotation() - 90,
+                    0, 0,
+                    tankTexture.getWidth(),
+                    tankTexture.getHeight(),
+                    false, false);
         }
     }
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.World;
 
 public class GameScreen implements Screen {
@@ -15,12 +16,18 @@ public class GameScreen implements Screen {
     private Viewport viewport;
     private SpriteBatch spriteBatch;
 
+    private Tank controlledTank;
+
     public GameScreen() {
         viewport = new FitViewport(300, 200);
         spriteBatch = new SpriteBatch();
 
+        controlledTank = new Tank();
+
         world = new World();
         worldRenderer = new WorldRenderer(world);
+
+        world.getTanks().add(controlledTank);
     }
 
     @Override
@@ -32,6 +39,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        world.update(delta);
 
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
