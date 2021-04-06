@@ -14,11 +14,13 @@ import com.jaeheonshim.pixeltanks.client.listener.ConnectionResponseListener;
 import com.jaeheonshim.pixeltanks.client.listener.TankInformationListener;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.TankDriveState;
+import com.jaeheonshim.pixeltanks.core.TankRotationState;
 import com.jaeheonshim.pixeltanks.core.World;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
 import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
 import com.jaeheonshim.pixeltanks.server.dto.TankInformationPacket;
+import com.jaeheonshim.pixeltanks.server.dto.TankRotationPacket;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -93,6 +95,17 @@ public class GameScreen implements Screen {
             client.sendUDP(new TankDrivePacket(TankDriveState.STOP));
             controllingTank.setDriveState(TankDriveState.STOP);
             controllingTank.setVelocity(0);
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && controllingTank.getRotationState() != TankRotationState.CCW) {
+            client.sendUDP(new TankRotationPacket(TankRotationState.CCW));
+            controllingTank.setRotationState(TankRotationState.CCW);
+        } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && controllingTank.getRotationState() != TankRotationState.CW) {
+            client.sendUDP(new TankRotationPacket(TankRotationState.CW));
+            controllingTank.setRotationState(TankRotationState.CW);
+        } else if(!(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && controllingTank.getRotationState() != TankRotationState.NONE) {
+            client.sendUDP(new TankRotationPacket(TankRotationState.NONE));
+            controllingTank.setRotationState(TankRotationState.NONE);
         }
     }
 

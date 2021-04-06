@@ -5,10 +5,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.TankDriveState;
+import com.jaeheonshim.pixeltanks.core.TankRotationState;
 import com.jaeheonshim.pixeltanks.core.World;
 import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
 import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
 import com.jaeheonshim.pixeltanks.server.dto.TankInformationPacket;
+import com.jaeheonshim.pixeltanks.server.dto.TankRotationPacket;
 import com.jaeheonshim.pixeltanks.server.listeners.TankMovementListener;
 import com.jaeheonshim.pixeltanks.server.listeners.ConnectionListener;
 
@@ -78,6 +80,9 @@ public class TankServer {
 
         kryo.register(TankDriveState.class);
         kryo.register(TankDrivePacket.class);
+
+        kryo.register(TankRotationPacket.class);
+        kryo.register(TankRotationState.class);
     }
 
     public World getWorld() {

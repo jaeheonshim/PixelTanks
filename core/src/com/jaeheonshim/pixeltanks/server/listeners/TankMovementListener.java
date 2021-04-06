@@ -4,8 +4,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.TankDriveState;
+import com.jaeheonshim.pixeltanks.core.TankRotationState;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
+import com.jaeheonshim.pixeltanks.server.dto.TankRotationPacket;
 
 import java.util.UUID;
 
@@ -20,7 +22,6 @@ public class TankMovementListener extends Listener {
     public void received(Connection connection, Object object) {
         if(object instanceof TankDrivePacket) {
             TankDrivePacket drivePacket = ((TankDrivePacket) object);
-            System.out.println(drivePacket.getDriveState());
             UUID uuid = tankServer.getIdToUuid().get(connection.getID());
 
             Tank tank = tankServer.getWorld().getTank(uuid);
@@ -33,6 +34,13 @@ public class TankMovementListener extends Listener {
             } else if(drivePacket.getDriveState() == TankDriveState.STOP) {
                 tank.setVelocity(0);
             }
+        } else if (object instanceof TankRotationPacket) {
+            TankRotationPacket rotationPacket = ((TankRotationPacket) object);
+
+            UUID uuid = tankServer.getIdToUuid().get(connection.getID());
+
+            Tank tank = tankServer.getWorld().getTank(uuid);
+            tank.setRotationState(rotationPacket.getRotationState());
         }
     }
 }

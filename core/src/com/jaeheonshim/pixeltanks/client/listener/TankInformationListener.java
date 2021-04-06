@@ -26,7 +26,7 @@ public class TankInformationListener extends Listener {
             }
 
             tank.setRemotePosition(tankInformationPacket.getPosition());
-            tank.setRotation(tankInformationPacket.getRotation());
+            tank.setRemoteRotation(tankInformationPacket.getRotation());
             //tank.setVelocity(tankInformationPacket.getVelocity());
         }
     }

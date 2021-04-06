@@ -6,12 +6,12 @@ public class TankInformationPacket {
     private String uuid;
     private Vector2 position;
     private float rotation;
-    private Vector2 velocity;
+    private float velocity;
 
     public TankInformationPacket() {
     }
 
-    public TankInformationPacket(String uuid, Vector2 position, float rotation, Vector2 velocity) {
+    public TankInformationPacket(String uuid, Vector2 position, float rotation, float velocity) {
         this.uuid = uuid;
         this.position = position;
         this.rotation = rotation;
@@ -42,11 +42,11 @@ public class TankInformationPacket {
         this.rotation = rotation;
     }
 
-    public Vector2 getVelocity() {
+    public float getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(Vector2 velocity) {
+    public void setVelocity(float velocity) {
         this.velocity = velocity;
     }
 }

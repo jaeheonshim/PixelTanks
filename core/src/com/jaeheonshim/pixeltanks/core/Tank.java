@@ -13,10 +13,12 @@ public class Tank {
     private Vector2 position = new Vector2();
     private Vector2 remotePosition = new Vector2();
 
+    private float remoteRotation;
     private float rotation = 90;
-    private Vector2 velocity = new Vector2();
+    private float velocity;
 
     private TankDriveState driveState = TankDriveState.STOP;
+    private TankRotationState rotationState = TankRotationState.NONE;
 
     public static final float ROTATION_SPEED = 120;
     public static final float MOVEMENT_SPEED = 50;
@@ -31,7 +33,13 @@ public class Tank {
         //handleInput(delta);
 
         //handlePosiitonInterpolation(delta);
-        position.add(new Vector2(velocity).scl(delta));
+        position.add(new Vector2(MathUtils.cos(MathUtils.degreesToRadians * rotation) * velocity, MathUtils.sin(MathUtils.degreesToRadians * rotation) * velocity).scl(delta));
+
+        if(rotationState == TankRotationState.CCW) {
+            rotation += delta * ROTATION_SPEED;
+        } else if(rotationState == TankRotationState.CW) {
+            rotation -= delta * ROTATION_SPEED;
+        }
     }
 
     public void handlePosiitonInterpolation(float delta) {
@@ -45,6 +53,9 @@ public class Tank {
             position.x += diffX * delta * INTERPOLATION_CONSTANT;
             position.y += diffY * delta * INTERPOLATION_CONSTANT;
         }
+
+        float diffTheta = remoteRotation - rotation;
+        rotation += diffTheta * delta * INTERPOLATION_CONSTANT;
     }
 
     private void handleInput(float delta) {
@@ -66,7 +77,7 @@ public class Tank {
     }
 
     public void setVelocity(float magnitude) {
-        velocity.set(MathUtils.cos(MathUtils.degreesToRadians * rotation) * magnitude, MathUtils.sin(MathUtils.degreesToRadians * rotation) * magnitude);
+        this.velocity = magnitude;
     }
 
     public Vector2 getPosition() {
@@ -77,7 +88,7 @@ public class Tank {
         return rotation;
     }
 
-    public Vector2 getVelocity() {
+    public float getVelocity() {
         return velocity;
     }
 
@@ -93,10 +104,6 @@ public class Tank {
         this.rotation = rotation;
     }
 
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
-    }
-
     public TankDriveState getDriveState() {
         return driveState;
     }
@@ -105,11 +112,27 @@ public class Tank {
         this.driveState = driveState;
     }
 
+    public TankRotationState getRotationState() {
+        return rotationState;
+    }
+
+    public void setRotationState(TankRotationState rotationState) {
+        this.rotationState = rotationState;
+    }
+
     public Vector2 getRemotePosition() {
         return remotePosition;
     }
 
     public void setRemotePosition(Vector2 remotePosition) {
         this.remotePosition = remotePosition;
+    }
+
+    public float getRemoteRotation() {
+        return remoteRotation;
+    }
+
+    public void setRemoteRotation(float remoteRotation) {
+        this.remoteRotation = remoteRotation;
     }
 }
