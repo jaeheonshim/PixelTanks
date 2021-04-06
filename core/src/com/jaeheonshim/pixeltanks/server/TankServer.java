@@ -3,11 +3,13 @@ package com.jaeheonshim.pixeltanks.server;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
 import com.jaeheonshim.pixeltanks.core.Tank;
+import com.jaeheonshim.pixeltanks.core.TankDriveState;
 import com.jaeheonshim.pixeltanks.core.World;
 import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
+import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
 import com.jaeheonshim.pixeltanks.server.dto.TankInformationPacket;
+import com.jaeheonshim.pixeltanks.server.listeners.TankMovementListener;
 import com.jaeheonshim.pixeltanks.server.listeners.ConnectionListener;
 
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class TankServer {
     private World world;
 
     public static final int TPS = 20;
+    private long lastTickTime = -1;
 
     private ScheduledExecutorService serverTicker;
 
@@ -41,15 +44,19 @@ public class TankServer {
         serverTicker.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                tick();
+                if(lastTickTime == -1) {
+                    lastTickTime = System.nanoTime();
+                }
+                tick(1f / TPS);
+                lastTickTime = System.nanoTime();
             }
         }, 0, (long) ((1f / TPS) * 1000), TimeUnit.MILLISECONDS);
 
     }
 
-    public void tick() {
+    public void tick(float delta) {
+        world.update(delta);
         for(Tank tank : world.getTanks()) {
-            tank.setRotation(tank.getRotation() + 10);
             server.sendToAllUDP(new TankInformationPacket(tank.getUuid().toString(), tank.getPosition(), tank.getRotation(), tank.getVelocity()));
         }
     }
@@ -59,6 +66,7 @@ public class TankServer {
         registerClasses(kryo);
 
         server.addListener(new ConnectionListener(this));
+        server.addListener(new TankMovementListener(this));
     }
 
     public static void registerClasses(Kryo kryo) {
@@ -67,6 +75,9 @@ public class TankServer {
 
         kryo.register(ConnectionResponse.class);
         kryo.register(UUID.class);
+
+        kryo.register(TankDriveState.class);
+        kryo.register(TankDrivePacket.class);
     }
 
     public World getWorld() {

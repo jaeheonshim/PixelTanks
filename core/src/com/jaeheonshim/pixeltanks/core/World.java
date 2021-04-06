@@ -21,6 +21,12 @@ public class World {
         return new ArrayList<>(tanks.values());
     }
 
+    public void clientCorrection(float delta) {
+        for(Tank tank : tanks.values()) {
+            tank.handlePosiitonInterpolation(delta);
+        }
+    }
+
     public void update(float delta) {
         for(Tank tank : tanks.values()) {
             tank.update(delta);

@@ -25,9 +25,9 @@ public class TankInformationListener extends Listener {
                 gameScreen.getWorld().addTank(tank);
             }
 
-            tank.setPosition(tankInformationPacket.getPosition());
+            tank.setRemotePosition(tankInformationPacket.getPosition());
             tank.setRotation(tankInformationPacket.getRotation());
-            tank.setVelocity(tankInformationPacket.getVelocity());
+            //tank.setVelocity(tankInformationPacket.getVelocity());
         }
     }
 }

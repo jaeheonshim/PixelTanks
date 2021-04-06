@@ -20,7 +20,9 @@ public class ConnectionResponseListener extends Listener {
     public void received(Connection connection, Object object) {
         if(object instanceof ConnectionResponse) {
             ConnectionResponse connectionResponse = ((ConnectionResponse) object);
-            gameScreen.getWorld().addTank(new Tank(UUID.fromString(connectionResponse.getAssignedUUID())));
+            Tank tank = new Tank(UUID.fromString(connectionResponse.getAssignedUUID()));
+            gameScreen.getWorld().addTank(tank);
+            gameScreen.setControllingTank(tank);
             Gdx.app.log("GameScreen", "Successfully established connection with server!");
         }
     }
