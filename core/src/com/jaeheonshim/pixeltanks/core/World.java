@@ -8,8 +8,8 @@ public class World {
     private Map<UUID, Tank> tanks = new HashMap<>();
     private Map<UUID, Bullet> bullets = new HashMap<>();
 
-    public static final float HEIGHT = 5400;
-    public static final float WIDTH = 9600;
+    public static final float HEIGHT = 2700;
+    public static final float WIDTH = 4800;
 
     public void removeTank(UUID uuid) {
         tanks.remove(uuid);

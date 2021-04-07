@@ -13,21 +13,18 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.jaeheonshim.pixeltanks.AssetHandler;
 import com.jaeheonshim.pixeltanks.client.listener.*;
+import com.jaeheonshim.pixeltanks.client.ui.GameUiRenderer;
 import com.jaeheonshim.pixeltanks.core.*;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 import com.jaeheonshim.pixeltanks.server.dto.*;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class GameScreen implements Screen {
     private World world;
     private WorldRenderer worldRenderer;
-    private MinimapRenderer minimapRenderer;
     private GameUiRenderer gameUiRenderer;
 
     private Viewport viewport;
@@ -49,8 +46,7 @@ public class GameScreen implements Screen {
 
         world = new World();
         worldRenderer = new WorldRenderer(world);
-        minimapRenderer = new MinimapRenderer(world);
-        gameUiRenderer = new GameUiRenderer(overlayViewport, clientState);
+        gameUiRenderer = new GameUiRenderer(overlayViewport, clientState, world);
 
         try {
             initNetworkClient();
@@ -104,7 +100,6 @@ public class GameScreen implements Screen {
         spriteBatch.setProjectionMatrix(overlayViewport.getCamera().combined);
         shapeRenderer.setProjectionMatrix(overlayViewport.getCamera().combined);
         overlayViewport.apply();
-        minimapRenderer.draw(spriteBatch, shapeRenderer, overlayViewport.getWorldWidth() - minimapRenderer.getMinimapTexture().getWidth(), 0);
         gameUiRenderer.getStage().draw();
     }
 

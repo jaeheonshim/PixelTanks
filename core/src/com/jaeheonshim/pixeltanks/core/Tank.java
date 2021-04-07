@@ -39,7 +39,12 @@ public class Tank {
         //handleInput(delta);
 
         //handlePosiitonInterpolation(delta);
+        Vector2 previousPosition = new Vector2(position);
         position.add(new Vector2(MathUtils.cos(MathUtils.degreesToRadians * rotation) * velocity, MathUtils.sin(MathUtils.degreesToRadians * rotation) * velocity).scl(delta));
+
+        if(position.x > World.WIDTH || position.y > World.HEIGHT || position.x < 0 || position.y < 0) {
+            position = previousPosition;
+        }
 
         if(rotationState == TankRotationState.CCW) {
             rotation += delta * ROTATION_SPEED;
