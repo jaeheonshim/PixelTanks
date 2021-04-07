@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public class Tank {
     private UUID uuid;
+    private String name = "Tank";
 
     private Vector2 position = new Vector2();
     private Vector2 remotePosition = new Vector2();
@@ -21,12 +22,17 @@ public class Tank {
     private TankRotationState rotationState = TankRotationState.NONE;
 
     public static final float ROTATION_SPEED = 120;
-    public static final float MOVEMENT_SPEED = 80;
+    public static final float MOVEMENT_SPEED = 280;
     public static final float DIFFERENCE_CORRECTION_THRESHOLD = 0;
     public static final float INTERPOLATION_CONSTANT = 10;
 
     public Tank(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public Tank(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
     }
 
     public void update(float delta) {
@@ -134,5 +140,9 @@ public class Tank {
 
     public void setRemoteRotation(float remoteRotation) {
         this.remoteRotation = remoteRotation;
+    }
+
+    public String getName() {
+        return name;
     }
 }

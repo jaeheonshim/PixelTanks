@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
     private Tank controllingTank;
 
     public GameScreen() {
-        viewport = new FitViewport(300, 200);
+        viewport = new FitViewport(1920, 1080);
         spriteBatch = new SpriteBatch();
 
         world = new World();
