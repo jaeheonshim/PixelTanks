@@ -108,6 +108,8 @@ public class GameUiRenderer {
         fireMode.setChecked(clientState.isFullAuto());
         if(controllingTank != null) {
             int ammo = controllingTank.getTankDetails().getAmmo();
+
+            healthBar.setPercent(controllingTank.getTankDetails().getHp() / (float) controllingTank.getTankDetails().getAvailableHp());
             ammoCounter.setText(Integer.toString(ammo));
             if(ammo == 0) {
                 ammoCounterLabelStyle.fontColor = Color.RED;

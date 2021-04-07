@@ -3,6 +3,7 @@ package com.jaeheonshim.pixeltanks.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.UUID;
@@ -15,12 +16,14 @@ public class Tank {
     private Vector2 remotePosition = new Vector2();
 
     private float remoteRotation;
-    private float rotation = 90;
+    private float rotation = 0;
     private float velocity;
 
     private TankDriveState driveState = TankDriveState.STOP;
     private TankRotationState rotationState = TankRotationState.NONE;
     private TankDetails tankDetails = new TankDetails();
+
+    private Polygon collider = new Polygon(new float[] {-20, -35, -8, -47, 39, -47, 51, -35, 51, 55, 43, 64, 25, 64, 25, 80, 8, 80, 8, 64, -12, 64, -20, 52});
 
     public static final float ROTATION_SPEED = 120;
     public static final float MOVEMENT_SPEED = 280;
@@ -42,6 +45,9 @@ public class Tank {
         //handlePosiitonInterpolation(delta);
         Vector2 previousPosition = new Vector2(position);
         position.add(new Vector2(MathUtils.cos(MathUtils.degreesToRadians * rotation) * velocity, MathUtils.sin(MathUtils.degreesToRadians * rotation) * velocity).scl(delta));
+        collider.setPosition(position.x, position.y);
+        collider.setOrigin(32 / 2f , 32 / 2f);
+        collider.setRotation(rotation - 90);
 
         if(position.x > World.WIDTH || position.y > World.HEIGHT || position.x < 0 || position.y < 0) {
             position = previousPosition;
@@ -158,5 +164,9 @@ public class Tank {
 
     public void setTankDetails(TankDetails tankDetails) {
         this.tankDetails = tankDetails;
+    }
+
+    public Polygon getCollider() {
+        return collider;
     }
 }

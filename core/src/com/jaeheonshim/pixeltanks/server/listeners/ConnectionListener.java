@@ -35,6 +35,8 @@ public class ConnectionListener extends Listener {
         Tank newTank = new Tank(uuid);
         tankServer.getWorld().addTank(newTank);
         newTank.getTankDetails().setAmmo(Constants.INITIAL_AMMO);
+        newTank.getTankDetails().setAvailableHp(Constants.INITIAL_HP);
+        newTank.getTankDetails().setHp(Constants.INITIAL_HP);
         newTank.setPosition(new Vector2(random.nextInt(((int) World.WIDTH)), random.nextInt(((int) World.HEIGHT))));
 
         connection.sendTCP(response);

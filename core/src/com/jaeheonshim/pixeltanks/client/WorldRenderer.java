@@ -1,10 +1,12 @@
 package com.jaeheonshim.pixeltanks.client;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.jaeheonshim.pixeltanks.AssetHandler;
@@ -25,10 +27,15 @@ public class WorldRenderer implements Disposable {
 
     private World world;
 
+    private ShapeRenderer shapeRenderer;
+
+    private boolean debug = true;
+
     public WorldRenderer(World world) {
         this.world = world;
 
         size16Font.setUseIntegerPositions(false);
+        shapeRenderer = new ShapeRenderer();
     }
 
     public void render(SpriteBatch spriteBatch) {
@@ -61,12 +68,41 @@ public class WorldRenderer implements Disposable {
             spriteBatch.draw(nametagBackground, tank.getPosition().x + NAMETAG_OFFSET.x, ((tank.getPosition().y + NAMETAG_OFFSET.y) - glyphLayout.height / 2f) - (nametagBackground.getHeight() / 2f), glyphLayout.width + 20, nametagBackground.getHeight());
             size16Font.draw(spriteBatch, tank.getName(), tank.getPosition().x + NAMETAG_OFFSET.x + 10, tank.getPosition().y + NAMETAG_OFFSET.y);
         }
+
+        spriteBatch.end();
+
+        shapeRenderer.setProjectionMatrix(spriteBatch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+
+        if(debug) {
+            for(Tank tank : world.getTanks()) {
+                shapeRenderer.polygon(tank.getCollider().getTransformedVertices());
+            }
+        }
+
+        shapeRenderer.end();
+        spriteBatch.begin();
     }
 
     private void renderBullets(SpriteBatch spriteBatch) {
         for(Bullet bullet : world.getBullets()) {
             spriteBatch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
         }
+
+        spriteBatch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+
+        if(debug) {
+            for(Bullet bullet : world.getBullets()) {
+                shapeRenderer.circle(bullet.getCollider().x, bullet.getCollider().y, bullet.getCollider().radius);
+            }
+        }
+
+        shapeRenderer.end();
+
+        spriteBatch.begin();
     }
 
     @Override
