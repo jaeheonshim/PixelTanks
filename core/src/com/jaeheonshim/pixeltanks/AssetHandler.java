@@ -31,6 +31,13 @@ public class AssetHandler {
         assetManager.load("BackgroundTile.png", Texture.class);
         assetManager.load("Minimap.png", Texture.class);
         assetManager.load("Bullet.png", Texture.class);
+
+        assetManager.load("textures/ui/FullAuto.png", Texture.class);
+        assetManager.load("textures/ui/SingleFire.png", Texture.class);
+    }
+
+    public <T> T get(String s) {
+        return assetManager.get(s);
     }
 
     public boolean update() {

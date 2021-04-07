@@ -7,14 +7,16 @@ import java.util.UUID;
 public class BulletSpawnPacket {
     private String uuid;
     private Vector2 position;
+    private Vector2 velocity;
     private float rotation;
 
     public BulletSpawnPacket() {
     }
 
-    public BulletSpawnPacket(String uuid, Vector2 position, float rotation) {
+    public BulletSpawnPacket(String uuid, Vector2 position, Vector2 velocity, float rotation) {
         this.uuid = uuid;
         this.position = position;
+        this.velocity = velocity;
         this.rotation = rotation;
     }
 
@@ -28,5 +30,9 @@ public class BulletSpawnPacket {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
     }
 }

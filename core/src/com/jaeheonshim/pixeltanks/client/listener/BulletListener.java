@@ -20,7 +20,9 @@ public class BulletListener extends Listener {
     public void received(Connection connection, Object object) {
         if(object instanceof BulletSpawnPacket) {
             BulletSpawnPacket spawnPacket = ((BulletSpawnPacket) object);
-            gameScreen.getWorld().addBullet(new Bullet(UUID.fromString(spawnPacket.getUuid()), spawnPacket.getPosition(), spawnPacket.getRotation()));
+            Bullet bullet = new Bullet(UUID.fromString(spawnPacket.getUuid()), spawnPacket.getPosition(), spawnPacket.getRotation());
+            bullet.setVelocity(spawnPacket.getVelocity());
+            gameScreen.getWorld().addBullet(bullet);
         } else if(object instanceof BulletPositionPacket) {
             BulletPositionPacket bulletPositionPacket = ((BulletPositionPacket) object);
 
@@ -28,7 +30,7 @@ public class BulletListener extends Listener {
             Bullet bullet = gameScreen.getWorld().getBullet(uuid);
 
             if(bullet != null) {
-                //bullet.setPosition(bulletPositionPacket.getPosition());
+                bullet.setPosition(bulletPositionPacket.getPosition());
             }
         }
     }

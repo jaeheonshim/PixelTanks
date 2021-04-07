@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,6 +28,7 @@ public class GameScreen implements Screen {
     private World world;
     private WorldRenderer worldRenderer;
     private MinimapRenderer minimapRenderer;
+    private GameUiRenderer gameUiRenderer;
 
     private Viewport viewport;
     private Viewport overlayViewport;
@@ -34,6 +37,7 @@ public class GameScreen implements Screen {
 
     private Client client = new Client();
     private Tank controllingTank;
+    private ClientState clientState = new ClientState();
 
     private Texture backgroundTile = AssetHandler.getInstance().getAssetManager().get("BackgroundTile.png");
 
@@ -46,6 +50,7 @@ public class GameScreen implements Screen {
         world = new World();
         worldRenderer = new WorldRenderer(world);
         minimapRenderer = new MinimapRenderer(world);
+        gameUiRenderer = new GameUiRenderer(overlayViewport, clientState);
 
         try {
             initNetworkClient();
@@ -76,9 +81,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        clientState.update(delta);
+
         world.clientCorrection(delta);
         world.update(delta);
         handleInput(delta);
+        gameUiRenderer.update(delta);
 
         viewport.apply();
 
@@ -97,6 +105,7 @@ public class GameScreen implements Screen {
         shapeRenderer.setProjectionMatrix(overlayViewport.getCamera().combined);
         overlayViewport.apply();
         minimapRenderer.draw(spriteBatch, shapeRenderer, overlayViewport.getWorldWidth() - minimapRenderer.getMinimapTexture().getWidth(), 0);
+        gameUiRenderer.getStage().draw();
     }
 
     private void drawBackground(SpriteBatch spriteBatch) {
@@ -140,10 +149,18 @@ public class GameScreen implements Screen {
             controllingTank.setRotationState(TankRotationState.NONE);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
-            client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), controllingTank.getRotation()));
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && clientState.isFullAuto() && clientState.getAutoTimer().isFinished()) {
+            fireBullet();
+            clientState.getAutoTimer().reset();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !clientState.isFullAuto()) {
+            fireBullet();
         }
+    }
+
+    private void fireBullet() {
+        Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
+        bullet.setVelocity(new Vector2(bullet.getVelocity()).add(controllingTank.getVelocity() * MathUtils.cosDeg(controllingTank.getRotation()), controllingTank.getVelocity() * MathUtils.sinDeg(controllingTank.getRotation())));
+        client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), bullet.getVelocity(), controllingTank.getRotation()));
     }
 
     @Override

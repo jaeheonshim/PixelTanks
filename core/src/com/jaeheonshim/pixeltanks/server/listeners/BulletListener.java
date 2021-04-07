@@ -20,6 +20,7 @@ public class BulletListener extends Listener {
         if(object instanceof BulletSpawnPacket) {
             BulletSpawnPacket spawnPacket = ((BulletSpawnPacket) object);
             Bullet bullet = new Bullet(UUID.fromString(spawnPacket.getUuid()), spawnPacket.getPosition(), spawnPacket.getRotation());
+            bullet.setVelocity(spawnPacket.getVelocity());
             tankServer.getWorld().getBullets().add(bullet);
 
             tankServer.getServer().sendToAllExceptUDP(connection.getID(), spawnPacket);
