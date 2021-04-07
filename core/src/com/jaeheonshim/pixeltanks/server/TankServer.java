@@ -3,11 +3,9 @@ package com.jaeheonshim.pixeltanks.server;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
-import com.jaeheonshim.pixeltanks.core.Tank;
-import com.jaeheonshim.pixeltanks.core.TankDriveState;
-import com.jaeheonshim.pixeltanks.core.TankRotationState;
-import com.jaeheonshim.pixeltanks.core.World;
+import com.jaeheonshim.pixeltanks.core.*;
 import com.jaeheonshim.pixeltanks.server.dto.*;
+import com.jaeheonshim.pixeltanks.server.listeners.BulletListener;
 import com.jaeheonshim.pixeltanks.server.listeners.TankMovementListener;
 import com.jaeheonshim.pixeltanks.server.listeners.ConnectionListener;
 
@@ -65,6 +63,10 @@ public class TankServer {
         for(Tank tank : world.getTanks()) {
             server.sendToAllUDP(new TankInformationPacket(tank.getUuid().toString(), tank.getPosition(), tank.getRotation(), tank.getVelocity()));
         }
+
+        for(Bullet bullet : world.getBullets()) {
+            server.sendToAllUDP(new BulletPositionPacket(bullet.getUuid().toString(), bullet.getPosition()));
+        }
     }
 
     private void initServer() {
@@ -73,6 +75,7 @@ public class TankServer {
 
         server.addListener(new ConnectionListener(this));
         server.addListener(new TankMovementListener(this));
+        server.addListener(new BulletListener(this));
     }
 
     public static void registerClasses(Kryo kryo) {
@@ -89,6 +92,9 @@ public class TankServer {
         kryo.register(TankRotationState.class);
 
         kryo.register(TankDisconnectPacket.class);
+
+        kryo.register(BulletSpawnPacket.class);
+        kryo.register(BulletPositionPacket.class);
     }
 
     public World getWorld() {

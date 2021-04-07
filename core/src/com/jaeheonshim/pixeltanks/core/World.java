@@ -1,9 +1,12 @@
 package com.jaeheonshim.pixeltanks.core;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.*;
 
 public class World {
     private Map<UUID, Tank> tanks = new HashMap<>();
+    private Map<UUID, Bullet> bullets = new HashMap<>();
 
     public static final float HEIGHT = 5400;
     public static final float WIDTH = 9600;
@@ -34,5 +37,28 @@ public class World {
         for (Tank tank : tanks.values()) {
             tank.update(delta);
         }
+
+        for(Bullet bullet : bullets.values()) {
+            bullet.update(delta);
+        }
+    }
+
+    public Bullet spawnBullet(Vector2 position, float rotation) {
+        Bullet bullet = new Bullet(UUID.randomUUID(), position, rotation);
+        bullets.put(bullet.getUuid(), bullet);
+
+        return bullet;
+    }
+
+    public void addBullet(Bullet bullet) {
+        bullets.put(bullet.getUuid(), bullet);
+    }
+
+    public Bullet getBullet(UUID uuid) {
+        return bullets.get(uuid);
+    }
+
+    public List<Bullet> getBullets() {
+        return new ArrayList<>(bullets.values());
     }
 }

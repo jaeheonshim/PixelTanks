@@ -14,14 +14,8 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.jaeheonshim.pixeltanks.AssetHandler;
-import com.jaeheonshim.pixeltanks.client.listener.ConnectionResponseListener;
-import com.jaeheonshim.pixeltanks.client.listener.MinimapRenderer;
-import com.jaeheonshim.pixeltanks.client.listener.TankConnectionListener;
-import com.jaeheonshim.pixeltanks.client.listener.TankInformationListener;
-import com.jaeheonshim.pixeltanks.core.Tank;
-import com.jaeheonshim.pixeltanks.core.TankDriveState;
-import com.jaeheonshim.pixeltanks.core.TankRotationState;
-import com.jaeheonshim.pixeltanks.core.World;
+import com.jaeheonshim.pixeltanks.client.listener.*;
+import com.jaeheonshim.pixeltanks.core.*;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 import com.jaeheonshim.pixeltanks.server.dto.*;
 
@@ -69,6 +63,7 @@ public class GameScreen implements Screen {
         client.addListener(new ConnectionResponseListener(this));
         client.addListener(new TankInformationListener(this));
         client.addListener(new TankConnectionListener(this));
+        client.addListener(new BulletListener(this));
     }
 
     @Override
@@ -87,8 +82,10 @@ public class GameScreen implements Screen {
 
         viewport.apply();
 
-        viewport.getCamera().position.set(controllingTank.getPosition(), viewport.getCamera().position.z);
-        viewport.getCamera().update();
+        if(controllingTank != null) {
+            viewport.getCamera().position.set(controllingTank.getPosition(), viewport.getCamera().position.z);
+            viewport.getCamera().update();
+        }
 
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
@@ -141,6 +138,11 @@ public class GameScreen implements Screen {
         } else if(!(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && controllingTank.getRotationState() != TankRotationState.NONE) {
             client.sendUDP(new TankRotationPacket(TankRotationState.NONE));
             controllingTank.setRotationState(TankRotationState.NONE);
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
+            client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), controllingTank.getRotation()));
         }
     }
 

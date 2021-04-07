@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.jaeheonshim.pixeltanks.AssetHandler;
+import com.jaeheonshim.pixeltanks.core.Bullet;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.World;
 
 public class WorldRenderer implements Disposable {
     private Texture tankTexture = new Texture(Gdx.files.internal("Tank.png"));
+    private Texture bulletTexture = AssetHandler.getInstance().getAssetManager().get("Bullet.png");
     private BitmapFont size16Font = AssetHandler.getInstance().getAssetManager().get("size16.ttf");
     private Texture nametagBackground = AssetHandler.getInstance().getAssetManager().get("NametagBackground.png");
 
@@ -33,6 +35,7 @@ public class WorldRenderer implements Disposable {
         spriteBatch.begin();
 
         drawTanks(spriteBatch);
+        renderBullets(spriteBatch);
 
         spriteBatch.end();
     }
@@ -57,6 +60,12 @@ public class WorldRenderer implements Disposable {
             glyphLayout.setText(size16Font, tank.getName());
             spriteBatch.draw(nametagBackground, tank.getPosition().x + NAMETAG_OFFSET.x, ((tank.getPosition().y + NAMETAG_OFFSET.y) - glyphLayout.height / 2f) - (nametagBackground.getHeight() / 2f), glyphLayout.width + 20, nametagBackground.getHeight());
             size16Font.draw(spriteBatch, tank.getName(), tank.getPosition().x + NAMETAG_OFFSET.x + 10, tank.getPosition().y + NAMETAG_OFFSET.y);
+        }
+    }
+
+    private void renderBullets(SpriteBatch spriteBatch) {
+        for(Bullet bullet : world.getBullets()) {
+            spriteBatch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
         }
     }
 

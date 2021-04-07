@@ -30,6 +30,7 @@ public class AssetHandler {
         assetManager.load("NametagBackground.png", Texture.class);
         assetManager.load("BackgroundTile.png", Texture.class);
         assetManager.load("Minimap.png", Texture.class);
+        assetManager.load("Bullet.png", Texture.class);
     }
 
     public boolean update() {
