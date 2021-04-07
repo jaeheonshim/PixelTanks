@@ -11,16 +11,14 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.jaeheonshim.pixeltanks.client.listener.ConnectionResponseListener;
+import com.jaeheonshim.pixeltanks.client.listener.TankConnectionListener;
 import com.jaeheonshim.pixeltanks.client.listener.TankInformationListener;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.TankDriveState;
 import com.jaeheonshim.pixeltanks.core.TankRotationState;
 import com.jaeheonshim.pixeltanks.core.World;
 import com.jaeheonshim.pixeltanks.server.TankServer;
-import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
-import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
-import com.jaeheonshim.pixeltanks.server.dto.TankInformationPacket;
-import com.jaeheonshim.pixeltanks.server.dto.TankRotationPacket;
+import com.jaeheonshim.pixeltanks.server.dto.*;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -57,6 +55,7 @@ public class GameScreen implements Screen {
 
         client.addListener(new ConnectionResponseListener(this));
         client.addListener(new TankInformationListener(this));
+        client.addListener(new TankConnectionListener(this));
     }
 
     @Override

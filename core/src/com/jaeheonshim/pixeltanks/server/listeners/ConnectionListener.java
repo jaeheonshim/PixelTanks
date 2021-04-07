@@ -6,6 +6,7 @@ import com.esotericsoftware.minlog.Log;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
+import com.jaeheonshim.pixeltanks.server.dto.TankDisconnectPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class ConnectionListener extends Listener {
             Log.info("Player disconnected, removing tank with UUID " + uuid);
             tankServer.getWorld().removeTank(uuid);
             tankServer.getIdToUuid().remove(connection.getID());
+            tankServer.getServer().sendToAllTCP(new TankDisconnectPacket(uuid.toString()));
         }
     }
 }

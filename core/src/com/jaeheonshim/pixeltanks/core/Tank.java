@@ -21,9 +21,9 @@ public class Tank {
     private TankRotationState rotationState = TankRotationState.NONE;
 
     public static final float ROTATION_SPEED = 120;
-    public static final float MOVEMENT_SPEED = 50;
+    public static final float MOVEMENT_SPEED = 80;
     public static final float DIFFERENCE_CORRECTION_THRESHOLD = 0;
-    public static final float INTERPOLATION_CONSTANT = 25;
+    public static final float INTERPOLATION_CONSTANT = 10;
 
     public Tank(UUID uuid) {
         this.uuid = uuid;

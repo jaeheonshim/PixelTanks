@@ -7,10 +7,7 @@ import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.TankDriveState;
 import com.jaeheonshim.pixeltanks.core.TankRotationState;
 import com.jaeheonshim.pixeltanks.core.World;
-import com.jaeheonshim.pixeltanks.server.dto.ConnectionResponse;
-import com.jaeheonshim.pixeltanks.server.dto.TankDrivePacket;
-import com.jaeheonshim.pixeltanks.server.dto.TankInformationPacket;
-import com.jaeheonshim.pixeltanks.server.dto.TankRotationPacket;
+import com.jaeheonshim.pixeltanks.server.dto.*;
 import com.jaeheonshim.pixeltanks.server.listeners.TankMovementListener;
 import com.jaeheonshim.pixeltanks.server.listeners.ConnectionListener;
 
@@ -58,6 +55,13 @@ public class TankServer {
 
     public void tick(float delta) {
         world.update(delta);
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         for(Tank tank : world.getTanks()) {
             server.sendToAllUDP(new TankInformationPacket(tank.getUuid().toString(), tank.getPosition(), tank.getRotation(), tank.getVelocity()));
         }
@@ -83,6 +87,8 @@ public class TankServer {
 
         kryo.register(TankRotationPacket.class);
         kryo.register(TankRotationState.class);
+
+        kryo.register(TankDisconnectPacket.class);
     }
 
     public World getWorld() {
@@ -91,5 +97,9 @@ public class TankServer {
 
     public Map<Integer, UUID> getIdToUuid() {
         return idToUuid;
+    }
+
+    public Server getServer() {
+        return server;
     }
 }
