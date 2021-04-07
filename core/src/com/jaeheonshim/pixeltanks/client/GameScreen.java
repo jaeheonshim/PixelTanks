@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.kryonet.Client;
@@ -13,6 +15,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.jaeheonshim.pixeltanks.AssetHandler;
 import com.jaeheonshim.pixeltanks.client.listener.ConnectionResponseListener;
+import com.jaeheonshim.pixeltanks.client.listener.MinimapRenderer;
 import com.jaeheonshim.pixeltanks.client.listener.TankConnectionListener;
 import com.jaeheonshim.pixeltanks.client.listener.TankInformationListener;
 import com.jaeheonshim.pixeltanks.core.Tank;
@@ -28,9 +31,12 @@ import java.util.UUID;
 public class GameScreen implements Screen {
     private World world;
     private WorldRenderer worldRenderer;
+    private MinimapRenderer minimapRenderer;
 
     private Viewport viewport;
+    private Viewport overlayViewport;
     private SpriteBatch spriteBatch;
+    private ShapeRenderer shapeRenderer;
 
     private Client client = new Client();
     private Tank controllingTank;
@@ -39,10 +45,13 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
+        overlayViewport = new ExtendViewport(1000, 1000);
         spriteBatch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
 
         world = new World();
         worldRenderer = new WorldRenderer(world);
+        minimapRenderer = new MinimapRenderer(world);
 
         try {
             initNetworkClient();
@@ -76,13 +85,21 @@ public class GameScreen implements Screen {
         world.update(delta);
         handleInput(delta);
 
+        viewport.apply();
+
         viewport.getCamera().position.set(controllingTank.getPosition(), viewport.getCamera().position.z);
         viewport.getCamera().update();
 
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         drawBackground(spriteBatch);
+
         worldRenderer.render(spriteBatch);
+
+        spriteBatch.setProjectionMatrix(overlayViewport.getCamera().combined);
+        shapeRenderer.setProjectionMatrix(overlayViewport.getCamera().combined);
+        overlayViewport.apply();
+        minimapRenderer.draw(spriteBatch, shapeRenderer, overlayViewport.getWorldWidth() - minimapRenderer.getMinimapTexture().getWidth(), 0);
     }
 
     private void drawBackground(SpriteBatch spriteBatch) {
@@ -130,6 +147,7 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        overlayViewport.update(width, height, true);
     }
 
     @Override

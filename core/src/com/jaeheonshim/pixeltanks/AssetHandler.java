@@ -29,6 +29,7 @@ public class AssetHandler {
         assetManager.load("size16.ttf", BitmapFont.class, size1Params);
         assetManager.load("NametagBackground.png", Texture.class);
         assetManager.load("BackgroundTile.png", Texture.class);
+        assetManager.load("Minimap.png", Texture.class);
     }
 
     public boolean update() {
