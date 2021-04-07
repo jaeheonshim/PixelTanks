@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
 
         world = new World();
         worldRenderer = new WorldRenderer(world);
-        gameUiRenderer = new GameUiRenderer(overlayViewport, clientState, world);
+        gameUiRenderer = new GameUiRenderer(overlayViewport, clientState, this);
 
         try {
             initNetworkClient();
@@ -65,6 +65,7 @@ public class GameScreen implements Screen {
         client.addListener(new TankInformationListener(this));
         client.addListener(new TankConnectionListener(this));
         client.addListener(new BulletListener(this));
+        client.addListener(new TankDetailsListener(this));
     }
 
     @Override
@@ -153,9 +154,11 @@ public class GameScreen implements Screen {
     }
 
     private void fireBullet() {
-        Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
-        bullet.setVelocity(new Vector2(bullet.getVelocity()).add(controllingTank.getVelocity() * MathUtils.cosDeg(controllingTank.getRotation()), controllingTank.getVelocity() * MathUtils.sinDeg(controllingTank.getRotation())));
-        client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), bullet.getVelocity(), controllingTank.getRotation()));
+        if(controllingTank.getTankDetails().getAmmo() > 0) {
+            Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
+            bullet.setVelocity(new Vector2(bullet.getVelocity()).add(controllingTank.getVelocity() * MathUtils.cosDeg(controllingTank.getRotation()), controllingTank.getVelocity() * MathUtils.sinDeg(controllingTank.getRotation())));
+            client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), bullet.getVelocity(), controllingTank.getRotation()));
+        }
     }
 
     @Override

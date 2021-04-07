@@ -20,6 +20,7 @@ public class Tank {
 
     private TankDriveState driveState = TankDriveState.STOP;
     private TankRotationState rotationState = TankRotationState.NONE;
+    private TankDetails tankDetails = new TankDetails();
 
     public static final float ROTATION_SPEED = 120;
     public static final float MOVEMENT_SPEED = 280;
@@ -149,5 +150,13 @@ public class Tank {
 
     public String getName() {
         return name;
+    }
+
+    public TankDetails getTankDetails() {
+        return tankDetails;
+    }
+
+    public void setTankDetails(TankDetails tankDetails) {
+        this.tankDetails = tankDetails;
     }
 }

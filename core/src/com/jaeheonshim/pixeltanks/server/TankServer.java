@@ -67,6 +67,10 @@ public class TankServer {
         for(Bullet bullet : world.getBullets()) {
             server.sendToAllUDP(new BulletPositionPacket(bullet.getUuid().toString(), bullet.getPosition()));
         }
+
+        for(int id : idToUuid.keySet()) {
+            server.sendToUDP(id, world.getTank(idToUuid.get(id)).getTankDetails());
+        }
     }
 
     private void initServer() {
@@ -95,6 +99,8 @@ public class TankServer {
 
         kryo.register(BulletSpawnPacket.class);
         kryo.register(BulletPositionPacket.class);
+
+        kryo.register(TankDetails.class);
     }
 
     public World getWorld() {

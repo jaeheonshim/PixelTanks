@@ -26,7 +26,15 @@ public class AssetHandler {
         size1Params.fontParameters.magFilter = Texture.TextureFilter.MipMapLinearNearest;
         size1Params.fontParameters.color = Color.WHITE;
 
+        FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        size2Params.fontFileName = "fonts/orange_kid.ttf";
+        size2Params.fontParameters.size = 38;
+        size2Params.fontParameters.minFilter = Texture.TextureFilter.Nearest;
+        size2Params.fontParameters.magFilter = Texture.TextureFilter.MipMapLinearNearest;
+        size2Params.fontParameters.color = Color.WHITE;
+
         assetManager.load("size16.ttf", BitmapFont.class, size1Params);
+        assetManager.load("size38_pixel.ttf", BitmapFont.class, size2Params);
         assetManager.load("NametagBackground.png", Texture.class);
         assetManager.load("BackgroundTile.png", Texture.class);
         assetManager.load("Minimap.png", Texture.class);
@@ -34,6 +42,7 @@ public class AssetHandler {
 
         assetManager.load("textures/ui/FullAuto.png", Texture.class);
         assetManager.load("textures/ui/SingleFire.png", Texture.class);
+        assetManager.load("textures/ui/AmmoCounter.png", Texture.class);
     }
 
     public <T> T get(String s) {
