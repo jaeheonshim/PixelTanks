@@ -3,22 +3,23 @@ package com.jaeheonshim.pixeltanks.client.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jaeheonshim.pixeltanks.AssetHandler;
 import com.jaeheonshim.pixeltanks.client.GameScreen;
+import com.jaeheonshim.pixeltanks.client.ui.widgets.HealthBar;
 import com.jaeheonshim.pixeltanks.client.ui.widgets.Minimap;
 import com.jaeheonshim.pixeltanks.core.ClientState;
 import com.jaeheonshim.pixeltanks.core.Tank;
@@ -27,6 +28,7 @@ import com.jaeheonshim.pixeltanks.core.World;
 public class GameUiRenderer {
     private Stage stage;
     private Table table;
+    private VerticalGroup statsGroup;
 
     private ClientState clientState;
     private World world;
@@ -35,10 +37,14 @@ public class GameUiRenderer {
     private TextureRegionDrawable fullAuto = new TextureRegionDrawable((Texture) AssetHandler.getInstance().get("textures/ui/FullAuto.png"));
     private TextureRegionDrawable singleFire = new TextureRegionDrawable((Texture) AssetHandler.getInstance().get("textures/ui/SingleFire.png"));
     private NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(((Texture) AssetHandler.getInstance().get("textures/ui/AmmoCounter.png")), 78, 14, 6, 6));
+
+    private TextureRegionDrawable progressBarBackground = new TextureRegionDrawable((Texture) AssetHandler.getInstance().get("textures/ui/HealthBar.png"));
+
     private BitmapFont font = AssetHandler.getInstance().getAssetManager().get("size38_pixel.ttf");
 
     private ImageButton fireMode;
     private Minimap minimap;
+    private HealthBar healthBar;
 
     private Label.LabelStyle ammoCounterLabelStyle = new Label.LabelStyle(font, Color.BLACK);
     private Label ammoCounter;
@@ -50,6 +56,8 @@ public class GameUiRenderer {
 
         stage = new Stage(viewport);
         table = new Table();
+        statsGroup = new VerticalGroup();
+
         table.setFillParent(true);
 
         Gdx.input.setInputProcessor(stage);
@@ -75,7 +83,13 @@ public class GameUiRenderer {
         table.top().left();
         table.pad(16);
 
-        table.add(ammoCounter).expandX().left().top();
+        healthBar = new HealthBar();
+        statsGroup.left().top();
+        statsGroup.columnAlign(Align.left);
+        statsGroup.addActor(healthBar);
+        statsGroup.addActor(ammoCounter);
+
+        table.add(statsGroup).expandX().left().top();
 
         table.right();
         minimap = new Minimap(world);

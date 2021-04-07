@@ -43,6 +43,7 @@ public class AssetHandler {
         assetManager.load("textures/ui/FullAuto.png", Texture.class);
         assetManager.load("textures/ui/SingleFire.png", Texture.class);
         assetManager.load("textures/ui/AmmoCounter.png", Texture.class);
+        assetManager.load("textures/ui/HealthBar.png", Texture.class);
     }
 
     public <T> T get(String s) {
