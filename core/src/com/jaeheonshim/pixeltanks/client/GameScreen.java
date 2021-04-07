@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.jaeheonshim.pixeltanks.AssetHandler;
 import com.jaeheonshim.pixeltanks.client.listener.ConnectionResponseListener;
 import com.jaeheonshim.pixeltanks.client.listener.TankConnectionListener;
 import com.jaeheonshim.pixeltanks.client.listener.TankInformationListener;
@@ -32,6 +34,8 @@ public class GameScreen implements Screen {
 
     private Client client = new Client();
     private Tank controllingTank;
+
+    private Texture backgroundTile = AssetHandler.getInstance().getAssetManager().get("BackgroundTile.png");
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
@@ -72,9 +76,24 @@ public class GameScreen implements Screen {
         world.update(delta);
         handleInput(delta);
 
+        viewport.getCamera().position.set(controllingTank.getPosition(), viewport.getCamera().position.z);
+        viewport.getCamera().update();
+
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
+        drawBackground(spriteBatch);
         worldRenderer.render(spriteBatch);
+    }
+
+    private void drawBackground(SpriteBatch spriteBatch) {
+        spriteBatch.begin();
+        for(int i = 0; i < World.WIDTH / backgroundTile.getWidth(); i++) {
+            for(int j = 0; j < World.HEIGHT / backgroundTile.getHeight(); j++) {
+                spriteBatch.draw(backgroundTile, i * backgroundTile.getWidth(), j * backgroundTile.getHeight());
+            }
+        }
+
+        spriteBatch.end();
     }
 
     private void handleInput(float delta) {

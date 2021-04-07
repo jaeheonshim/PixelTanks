@@ -5,6 +5,9 @@ import java.util.*;
 public class World {
     private Map<UUID, Tank> tanks = new HashMap<>();
 
+    public static final float HEIGHT = 5400;
+    public static final float WIDTH = 9600;
+
     public void removeTank(UUID uuid) {
         tanks.remove(uuid);
     }
@@ -22,13 +25,13 @@ public class World {
     }
 
     public void clientCorrection(float delta) {
-        for(Tank tank : tanks.values()) {
+        for (Tank tank : tanks.values()) {
             tank.handlePosiitonInterpolation(delta);
         }
     }
 
     public void update(float delta) {
-        for(Tank tank : tanks.values()) {
+        for (Tank tank : tanks.values()) {
             tank.update(delta);
         }
     }
