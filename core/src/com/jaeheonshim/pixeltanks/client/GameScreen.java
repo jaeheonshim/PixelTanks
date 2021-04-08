@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -36,7 +37,7 @@ public class GameScreen implements Screen {
     private Tank controllingTank;
     private ClientState clientState = new ClientState();
 
-    private Texture backgroundTile = AssetHandler.getInstance().getAssetManager().get("BackgroundTile.png");
+    private TextureRegion backgroundTile = AssetHandler.getInstance().getAtlasTexture("BackgroundTile");
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
@@ -106,9 +107,9 @@ public class GameScreen implements Screen {
 
     private void drawBackground(SpriteBatch spriteBatch) {
         spriteBatch.begin();
-        for(int i = 0; i < World.WIDTH / backgroundTile.getWidth(); i++) {
-            for(int j = 0; j < World.HEIGHT / backgroundTile.getHeight(); j++) {
-                spriteBatch.draw(backgroundTile, i * backgroundTile.getWidth(), j * backgroundTile.getHeight());
+        for(int i = 0; i < World.WIDTH / backgroundTile.getRegionWidth(); i++) {
+            for(int j = 0; j < World.HEIGHT / backgroundTile.getRegionHeight(); j++) {
+                spriteBatch.draw(backgroundTile, i * backgroundTile.getRegionWidth(), j * backgroundTile.getRegionHeight());
             }
         }
 

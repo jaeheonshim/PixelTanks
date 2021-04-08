@@ -58,18 +58,16 @@ public class TankServer {
             server.sendToAllUDP(new BulletSpawnPacket(uuid.toString(), true));
         }
 
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         for(Tank tank : world.getTanks()) {
             server.sendToAllUDP(new TankInformationPacket(tank.getUuid().toString(), tank.getPosition(), tank.getRotation(), tank.getVelocity()));
         }
 
         for(Bullet bullet : world.getBullets()) {
-            server.sendToAllUDP(new BulletPositionPacket(bullet.getUuid().toString(), bullet.getPosition()));
+            if(bullet.isLifespanFinished()) {
+                server.sendToAllUDP(new BulletSpawnPacket(bullet.getUuid().toString(), true));
+            } else {
+                server.sendToAllUDP(new BulletPositionPacket(bullet.getUuid().toString(), bullet.getPosition()));
+            }
         }
 
         for(int id : idToUuid.keySet()) {

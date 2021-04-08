@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -15,10 +16,10 @@ import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.World;
 
 public class WorldRenderer implements Disposable {
-    private Texture tankTexture = new Texture(Gdx.files.internal("Tank.png"));
-    private Texture bulletTexture = AssetHandler.getInstance().getAssetManager().get("Bullet.png");
+    private TextureRegion tankTexture = AssetHandler.getInstance().getAtlasTexture("Tank");
+    private TextureRegion bulletTexture = AssetHandler.getInstance().getAtlasTexture("Bullet");
     private BitmapFont size16Font = AssetHandler.getInstance().getAssetManager().get("size16.ttf");
-    private Texture nametagBackground = AssetHandler.getInstance().getAssetManager().get("NametagBackground.png");
+    private TextureRegion nametagBackground = AssetHandler.getInstance().getAtlasTexture("NametagBackground");
 
     private GlyphLayout glyphLayout = new GlyphLayout();
 
@@ -59,21 +60,17 @@ public class WorldRenderer implements Disposable {
                     tankTexture,
                     tank.getPosition().x,
                     tank.getPosition().y,
-                    tankTexture.getWidth() / 2f,
-                    tankTexture.getHeight() / 2f,
-                    tankTexture.getWidth(),
-                    tankTexture.getHeight(),
+                    tankTexture.getRegionWidth() / 2f,
+                    tankTexture.getRegionHeight() / 2f,
+                    tankTexture.getRegionWidth(),
+                    tankTexture.getRegionHeight(),
                     TANK_SCALE, TANK_SCALE,
-                    tank.getRotation() - 90,
-                    0, 0,
-                    tankTexture.getWidth(),
-                    tankTexture.getHeight(),
-                    false, false);
+                    tank.getRotation() - 90);
 
             spriteBatch.setColor(Color.WHITE);
 
             glyphLayout.setText(size16Font, tank.getName());
-            spriteBatch.draw(nametagBackground, tank.getPosition().x + NAMETAG_OFFSET.x, ((tank.getPosition().y + NAMETAG_OFFSET.y) - glyphLayout.height / 2f) - (nametagBackground.getHeight() / 2f), glyphLayout.width + 20, nametagBackground.getHeight());
+            spriteBatch.draw(nametagBackground, tank.getPosition().x + NAMETAG_OFFSET.x, ((tank.getPosition().y + NAMETAG_OFFSET.y) - glyphLayout.height / 2f) - (nametagBackground.getRegionHeight() / 2f), glyphLayout.width + 20, nametagBackground.getRegionHeight());
             size16Font.draw(spriteBatch, tank.getName(), tank.getPosition().x + NAMETAG_OFFSET.x + 10, tank.getPosition().y + NAMETAG_OFFSET.y);
         }
 
@@ -115,6 +112,6 @@ public class WorldRenderer implements Disposable {
 
     @Override
     public void dispose() {
-        tankTexture.dispose();
+
     }
 }

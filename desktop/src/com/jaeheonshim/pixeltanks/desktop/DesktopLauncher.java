@@ -2,6 +2,7 @@ package com.jaeheonshim.pixeltanks.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.jaeheonshim.pixeltanks.PixelTanks;
 import com.jaeheonshim.pixeltanks.server.TankServer;
 
@@ -14,6 +15,7 @@ public class DesktopLauncher {
 		if(arg.length > 0 && arg[0].equalsIgnoreCase("-server")) {
 			tankServer = new TankServer();
 		} else {
+			TexturePacker.process("textures", "packed", "atlas");
 			LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 			new LwjglApplication(new PixelTanks(), config);
 		}

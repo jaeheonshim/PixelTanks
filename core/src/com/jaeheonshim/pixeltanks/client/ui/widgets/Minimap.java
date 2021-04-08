@@ -3,6 +3,7 @@ package com.jaeheonshim.pixeltanks.client.ui.widgets;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -14,7 +15,7 @@ import com.jaeheonshim.pixeltanks.core.World;
 public class Minimap extends Widget {
     private World world;
     private Drawable background;
-    private Texture minimapTexture = AssetHandler.getInstance().getAssetManager().get("Minimap.png");
+    private TextureRegion minimapTexture = AssetHandler.getInstance().getAtlasTexture("Minimap");
     private final float border = 4;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -37,7 +38,7 @@ public class Minimap extends Widget {
         float scaleX = getScaleX();
         float scaleY = getScaleY();
 
-        batch.draw(minimapTexture, x, y, minimapTexture.getWidth(), minimapTexture.getHeight());
+        batch.draw(minimapTexture, x, y, minimapTexture.getRegionWidth(), minimapTexture.getRegionHeight());
 
         batch.end();
 
@@ -56,11 +57,11 @@ public class Minimap extends Widget {
 
     @Override
     public float getPrefHeight() {
-        return minimapTexture.getHeight();
+        return minimapTexture.getRegionHeight();
     }
 
     @Override
     public float getPrefWidth() {
-        return minimapTexture.getWidth();
+        return minimapTexture.getRegionWidth();
     }
 }

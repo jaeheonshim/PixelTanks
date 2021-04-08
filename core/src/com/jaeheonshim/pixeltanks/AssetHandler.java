@@ -6,6 +6,9 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -33,17 +36,23 @@ public class AssetHandler {
         size2Params.fontParameters.magFilter = Texture.TextureFilter.MipMapLinearNearest;
         size2Params.fontParameters.color = Color.WHITE;
 
-        assetManager.load("size16.ttf", BitmapFont.class, size1Params);
-        assetManager.load("size38_pixel.ttf", BitmapFont.class, size2Params);
-        assetManager.load("NametagBackground.png", Texture.class);
-        assetManager.load("BackgroundTile.png", Texture.class);
-        assetManager.load("Minimap.png", Texture.class);
-        assetManager.load("Bullet.png", Texture.class);
+        assetManager.load("packed/atlas.atlas", TextureAtlas.class);
+
+       assetManager.load("size16.ttf", BitmapFont.class, size1Params);
+       assetManager.load("size38_pixel.ttf", BitmapFont.class, size2Params);
+//        assetManager.load("NametagBackground.png", Texture.class);
+//        assetManager.load("BackgroundTile.png", Texture.class);
+//        assetManager.load("Minimap.png", Texture.class);
+//        assetManager.load("Bullet.png", Texture.class);
 
         assetManager.load("textures/ui/FullAuto.png", Texture.class);
         assetManager.load("textures/ui/SingleFire.png", Texture.class);
         assetManager.load("textures/ui/AmmoCounter.png", Texture.class);
         assetManager.load("textures/ui/HealthBar.png", Texture.class);
+    }
+
+    public TextureRegion getAtlasTexture(String s) {
+        return ((TextureAtlas) assetManager.get("packed/atlas.atlas")).findRegion(s);
     }
 
     public <T> T get(String s) {
