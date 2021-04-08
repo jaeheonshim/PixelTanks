@@ -16,7 +16,10 @@ public class Bullet {
     private Circle collider;
     private Vector2 colliderOffset = new Vector2(16, 16);
     private Timer lifespanTimer = new Timer(10);
+
+    private float stateTime;
     private boolean dying;
+    private boolean dead;
 
     public Bullet(UUID uuid, UUID firedBy, Vector2 position, float rotation) {
         this.uuid = uuid;
@@ -31,9 +34,13 @@ public class Bullet {
     public static final float VELOCITY = 400;
 
     public void update(float delta) {
-        this.position = position.add(new Vector2(velocity).scl(delta));
-        collider.setPosition(new Vector2(this.position).add(colliderOffset));
-        lifespanTimer.update(delta);
+        if(dying) {
+            stateTime += delta;
+        } else {
+            this.position = position.add(new Vector2(velocity).scl(delta));
+            collider.setPosition(new Vector2(this.position).add(colliderOffset));
+            lifespanTimer.update(delta);
+        }
     }
 
     public void setPosition(Vector2 position) {
@@ -74,5 +81,17 @@ public class Bullet {
 
     public boolean isLifespanFinished() {
         return lifespanTimer.isFinished();
+    }
+
+    public float getStateTime() {
+        return stateTime;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 }

@@ -55,6 +55,10 @@ public class AssetHandler {
         return ((TextureAtlas) assetManager.get("packed/atlas.atlas")).findRegion(s);
     }
 
+    public TextureAtlas getAtlas() {
+        return assetManager.get("packed/atlas.atlas");
+    }
+
     public <T> T get(String s) {
         return assetManager.get(s);
     }

@@ -3,23 +3,25 @@ package com.jaeheonshim.pixeltanks.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.jaeheonshim.pixeltanks.AssetHandler;
+import com.jaeheonshim.pixeltanks.client.util.AnimationCreator;
 import com.jaeheonshim.pixeltanks.core.Bullet;
 import com.jaeheonshim.pixeltanks.core.Tank;
 import com.jaeheonshim.pixeltanks.core.World;
+
+import java.util.UUID;
 
 public class WorldRenderer implements Disposable {
     private TextureRegion tankTexture = AssetHandler.getInstance().getAtlasTexture("Tank");
     private TextureRegion bulletTexture = AssetHandler.getInstance().getAtlasTexture("Bullet");
     private BitmapFont size16Font = AssetHandler.getInstance().getAssetManager().get("size16.ttf");
     private TextureRegion nametagBackground = AssetHandler.getInstance().getAtlasTexture("NametagBackground");
+
+    private Animation<TextureRegion> bulletDespawnAnimation;
 
     private GlyphLayout glyphLayout = new GlyphLayout();
 
@@ -31,11 +33,14 @@ public class WorldRenderer implements Disposable {
 
     private ShapeRenderer shapeRenderer;
 
-    private boolean debug = true;
+    private boolean debug = false;
 
     public WorldRenderer(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
+
+        AnimationCreator creator = new AnimationCreator(AssetHandler.getInstance().getAtlasTexture("BulletDeath"));
+        bulletDespawnAnimation = creator.create(1, 5, 0.02f);
 
         size16Font.setUseIntegerPositions(false);
         shapeRenderer = new ShapeRenderer();
@@ -92,7 +97,16 @@ public class WorldRenderer implements Disposable {
 
     private void renderBullets(SpriteBatch spriteBatch) {
         for (Bullet bullet : world.getBullets()) {
-            spriteBatch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
+            if(bullet.isDying()) {
+                TextureRegion frame = bulletDespawnAnimation.getKeyFrame(bullet.getStateTime());
+                spriteBatch.draw(frame, bullet.getPosition().x, bullet.getPosition().y);
+
+                if(bulletDespawnAnimation.isAnimationFinished(bullet.getStateTime())) {
+                    bullet.setDead(true);
+                }
+            } else {
+                spriteBatch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
+            }
         }
 
         spriteBatch.end();

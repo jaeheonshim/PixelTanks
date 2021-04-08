@@ -1,6 +1,7 @@
 package com.jaeheonshim.pixeltanks.core;
 
 import com.badlogic.gdx.math.Vector2;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.*;
 
@@ -38,8 +39,16 @@ public class World {
             tank.update(delta);
         }
 
+        List<UUID> deadBullets = new ArrayList<>();
         for(Bullet bullet : bullets.values()) {
             bullet.update(delta);
+            if(bullet.isDead()) {
+                deadBullets.add(bullet.getUuid());
+            }
+        }
+
+        for(UUID uuid : deadBullets) {
+            removeBullet(uuid);
         }
     }
 

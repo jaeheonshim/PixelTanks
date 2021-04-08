@@ -25,7 +25,9 @@ public class BulletListener extends Listener {
                 bullet.setVelocity(spawnPacket.getVelocity());
                 gameScreen.getWorld().addBullet(bullet);
             } else {
-                gameScreen.getWorld().removeBullet(UUID.fromString(spawnPacket.getUuid()));
+                if(gameScreen.getWorld().getBullet(UUID.fromString(spawnPacket.getUuid())) != null)
+                    gameScreen.getWorld().getBullet(UUID.fromString(spawnPacket.getUuid())).setDying(true);
+//                gameScreen.getWorld().removeBullet(UUID.fromString(spawnPacket.getUuid()));
             }
         } else if(object instanceof BulletPositionPacket) {
             BulletPositionPacket bulletPositionPacket = ((BulletPositionPacket) object);
