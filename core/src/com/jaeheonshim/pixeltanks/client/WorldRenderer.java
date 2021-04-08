@@ -25,14 +25,16 @@ public class WorldRenderer implements Disposable {
     public static final float TANK_SCALE = 4;
     public static final Vector2 NAMETAG_OFFSET = new Vector2(-20, 80);
 
+    private GameScreen gameScreen;
     private World world;
 
     private ShapeRenderer shapeRenderer;
 
     private boolean debug = true;
 
-    public WorldRenderer(World world) {
+    public WorldRenderer(World world, GameScreen gameScreen) {
         this.world = world;
+        this.gameScreen = gameScreen;
 
         size16Font.setUseIntegerPositions(false);
         shapeRenderer = new ShapeRenderer();
@@ -48,7 +50,11 @@ public class WorldRenderer implements Disposable {
     }
 
     private void drawTanks(SpriteBatch spriteBatch) {
-        for(Tank tank : world.getTanks()) {
+        for (Tank tank : world.getTanks()) {
+            if (tank.getTankDetails().isTakingDamage()) {
+                spriteBatch.setColor(Color.valueOf("FF8484"));
+            }
+
             spriteBatch.draw(
                     tankTexture,
                     tank.getPosition().x,
@@ -64,6 +70,8 @@ public class WorldRenderer implements Disposable {
                     tankTexture.getHeight(),
                     false, false);
 
+            spriteBatch.setColor(Color.WHITE);
+
             glyphLayout.setText(size16Font, tank.getName());
             spriteBatch.draw(nametagBackground, tank.getPosition().x + NAMETAG_OFFSET.x, ((tank.getPosition().y + NAMETAG_OFFSET.y) - glyphLayout.height / 2f) - (nametagBackground.getHeight() / 2f), glyphLayout.width + 20, nametagBackground.getHeight());
             size16Font.draw(spriteBatch, tank.getName(), tank.getPosition().x + NAMETAG_OFFSET.x + 10, tank.getPosition().y + NAMETAG_OFFSET.y);
@@ -75,8 +83,8 @@ public class WorldRenderer implements Disposable {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
 
-        if(debug) {
-            for(Tank tank : world.getTanks()) {
+        if (debug) {
+            for (Tank tank : world.getTanks()) {
                 shapeRenderer.polygon(tank.getCollider().getTransformedVertices());
             }
         }
@@ -86,7 +94,7 @@ public class WorldRenderer implements Disposable {
     }
 
     private void renderBullets(SpriteBatch spriteBatch) {
-        for(Bullet bullet : world.getBullets()) {
+        for (Bullet bullet : world.getBullets()) {
             spriteBatch.draw(bulletTexture, bullet.getPosition().x, bullet.getPosition().y);
         }
 
@@ -94,8 +102,8 @@ public class WorldRenderer implements Disposable {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
 
-        if(debug) {
-            for(Bullet bullet : world.getBullets()) {
+        if (debug) {
+            for (Bullet bullet : world.getBullets()) {
                 shapeRenderer.circle(bullet.getCollider().x, bullet.getCollider().y, bullet.getCollider().radius);
             }
         }

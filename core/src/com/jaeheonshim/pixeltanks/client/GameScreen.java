@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         world = new World();
-        worldRenderer = new WorldRenderer(world);
+        worldRenderer = new WorldRenderer(world, this);
         gameUiRenderer = new GameUiRenderer(overlayViewport, clientState, this);
 
         try {
@@ -198,5 +198,9 @@ public class GameScreen implements Screen {
 
     public void setControllingTank(Tank controllingTank) {
         this.controllingTank = controllingTank;
+    }
+
+    public ClientState getClientState() {
+        return clientState;
     }
 }

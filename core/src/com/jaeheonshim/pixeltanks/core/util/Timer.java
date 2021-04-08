@@ -4,6 +4,9 @@ public class Timer {
     private float timer;
     private float value;
 
+    public Timer() {
+    }
+
     public Timer(float value) {
         this.value = value;
         this.timer = value;

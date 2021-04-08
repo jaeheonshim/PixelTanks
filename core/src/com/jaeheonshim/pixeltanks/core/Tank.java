@@ -58,6 +58,14 @@ public class Tank {
         } else if(rotationState == TankRotationState.CW) {
             rotation -= delta * ROTATION_SPEED;
         }
+
+        if(tankDetails.isTakingDamage()) {
+            tankDetails.getDamageTintTimer().update(delta);
+            if(tankDetails.getDamageTintTimer().isFinished()) {
+                tankDetails.setTakingDamage(false);
+                tankDetails.getDamageTintTimer().reset();
+            }
+        }
     }
 
     public void handlePosiitonInterpolation(float delta) {

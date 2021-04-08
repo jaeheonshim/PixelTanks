@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import com.jaeheonshim.pixeltanks.core.*;
+import com.jaeheonshim.pixeltanks.core.util.Timer;
 import com.jaeheonshim.pixeltanks.server.dto.*;
 import com.jaeheonshim.pixeltanks.server.listeners.BulletListener;
 import com.jaeheonshim.pixeltanks.server.listeners.TankMovementListener;
@@ -72,7 +73,7 @@ public class TankServer {
         }
 
         for(int id : idToUuid.keySet()) {
-            server.sendToUDP(id, world.getTank(idToUuid.get(id)).getTankDetails());
+            server.sendToAllUDP(new TankDetailsPacket(idToUuid.get(id).toString(), world.getTank(idToUuid.get(id)).getTankDetails()));
         }
     }
 
@@ -104,6 +105,8 @@ public class TankServer {
         kryo.register(BulletPositionPacket.class);
 
         kryo.register(TankDetails.class);
+        kryo.register(TankDetailsPacket.class);
+        kryo.register(Timer.class);
     }
 
     public World getWorld() {
