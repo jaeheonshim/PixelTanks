@@ -22,9 +22,9 @@ public class BulletListener extends Listener {
             BulletSpawnPacket spawnPacket = ((BulletSpawnPacket) object);
             Tank tank = tankServer.getWorld().getTank(tankServer.getIdToUuid().get(connection.getID()));
             if(tank.getTankDetails().getAmmo() - 1 >= 0) {
-                Bullet bullet = new Bullet(UUID.fromString(spawnPacket.getUuid()), spawnPacket.getPosition(), spawnPacket.getRotation());
+                Bullet bullet = new Bullet(UUID.fromString(spawnPacket.getUuid()), UUID.fromString(spawnPacket.getFiredBy()), spawnPacket.getPosition(), spawnPacket.getRotation());
                 bullet.setVelocity(spawnPacket.getVelocity());
-                tankServer.getWorld().getBullets().add(bullet);
+                tankServer.getWorld().addBullet(bullet);
 
                 tankServer.getServer().sendToAllExceptUDP(connection.getID(), spawnPacket);
                 tank.getTankDetails().setAmmo(tank.getTankDetails().getAmmo() - 1);

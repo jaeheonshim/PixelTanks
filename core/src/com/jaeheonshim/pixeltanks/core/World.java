@@ -43,8 +43,8 @@ public class World {
         }
     }
 
-    public Bullet spawnBullet(Vector2 position, float rotation) {
-        Bullet bullet = new Bullet(UUID.randomUUID(), position, rotation);
+    public Bullet spawnBullet(Vector2 position, float rotation, Tank controllingTank) {
+        Bullet bullet = new Bullet(UUID.randomUUID(), controllingTank.getUuid(), position, rotation);
         bullets.put(bullet.getUuid(), bullet);
 
         return bullet;
@@ -60,5 +60,34 @@ public class World {
 
     public List<Bullet> getBullets() {
         return new ArrayList<>(bullets.values());
+    }
+
+    public void removeBullet(UUID uuid) {
+        bullets.remove(uuid);
+    }
+
+    public List<UUID> checkCollisions() {
+        List<UUID> despawnedProjectiles = new ArrayList<>();
+
+        for(Tank tank : tanks.values()) {
+            List<UUID> deadBullets = new ArrayList<>();
+
+            for(Bullet bullet : bullets.values()) {
+                if(CollisionUtil.polyCircle(tank.getCollider().getTransformedVertices(), bullet.getCollider().x, bullet.getCollider().y, bullet.getCollider().radius)) {
+                    if(!tank.getUuid().equals(bullet.getFiredBy())) {
+                        tank.onProjectileCollison(bullet.getUuid(), bullet.getFiredBy());
+                        deadBullets.add(bullet.getUuid());
+                    }
+                }
+            }
+
+            for(UUID uuid : deadBullets) {
+                bullets.remove(uuid);
+            }
+
+            despawnedProjectiles.addAll(deadBullets);
+        }
+
+        return despawnedProjectiles;
     }
 }

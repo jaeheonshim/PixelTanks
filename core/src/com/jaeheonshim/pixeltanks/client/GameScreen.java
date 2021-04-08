@@ -155,9 +155,9 @@ public class GameScreen implements Screen {
 
     private void fireBullet() {
         if(controllingTank.getTankDetails().getAmmo() > 0) {
-            Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation());
+            Bullet bullet = world.spawnBullet(controllingTank.getPosition(), controllingTank.getRotation(), controllingTank);
             bullet.setVelocity(new Vector2(bullet.getVelocity()).add(controllingTank.getVelocity() * MathUtils.cosDeg(controllingTank.getRotation()), controllingTank.getVelocity() * MathUtils.sinDeg(controllingTank.getRotation())));
-            client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getPosition(), bullet.getVelocity(), controllingTank.getRotation()));
+            client.sendUDP(new BulletSpawnPacket(bullet.getUuid().toString(), controllingTank.getUuid().toString(), controllingTank.getPosition(), bullet.getVelocity(), controllingTank.getRotation()));
         }
     }
 

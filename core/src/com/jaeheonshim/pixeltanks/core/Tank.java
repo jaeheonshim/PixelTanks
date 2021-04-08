@@ -94,6 +94,12 @@ public class Tank {
         }
     }
 
+    public void onProjectileCollison(UUID projectile, UUID firedBy) {
+        if(!firedBy.equals(this.uuid)) {
+            getTankDetails().setHp(getTankDetails().getHp() - 10);
+        }
+    }
+
     public void setVelocity(float magnitude) {
         this.velocity = magnitude;
     }

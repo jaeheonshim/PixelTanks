@@ -8,14 +8,16 @@ import java.util.UUID;
 
 public class Bullet {
     private UUID uuid;
+    private UUID firedBy;
     private Vector2 position = new Vector2();
     private Vector2 velocity;
     private float rotation;
     private Circle collider;
     private Vector2 colliderOffset = new Vector2(16, 16);
 
-    public Bullet(UUID uuid, Vector2 position, float rotation) {
+    public Bullet(UUID uuid, UUID firedBy, Vector2 position, float rotation) {
         this.uuid = uuid;
+        this.firedBy = firedBy;
         this.position = new Vector2(position);
         this.rotation = rotation;
 
@@ -52,5 +54,9 @@ public class Bullet {
 
     public Circle getCollider() {
         return collider;
+    }
+
+    public UUID getFiredBy() {
+        return firedBy;
     }
 }

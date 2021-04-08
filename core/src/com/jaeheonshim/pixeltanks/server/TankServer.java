@@ -53,6 +53,9 @@ public class TankServer {
 
     public void tick(float delta) {
         world.update(delta);
+        for(UUID uuid : world.checkCollisions()) {
+            server.sendToAllUDP(new BulletSpawnPacket(uuid.toString(), true));
+        }
 
         try {
             Thread.sleep(10);
